@@ -1,7 +1,13 @@
-import requests
 import json
+import re
+import requests
 from bs4 import BeautifulSoup
-url= "https://www.ceneo.pl/113706425#tab=reviews"
+
+source=input("Your product id from the link, or the full link: ")
+if not isinstance(source, int):
+    source="".join(map(str,re.findall(r"\d", source)))
+
+url= "https://www.ceneo.pl/"+source+"#tab=reviews"
 all_opinions = []
 while(url):
     #print(url)
@@ -55,7 +61,6 @@ while(url):
         url = "https://www.ceneo.pl"+page.select_one("a.pagination__next")["href"]
     except TypeError:
         url = None
-
-with open("opinions/113706425.json", "w", encoding="UTF-8") as  jf:
+file_attributes="opinions/"+source+".json"
+with open(file_attributes, "w", encoding="UTF-8") as  jf:
     json.dump(all_opinions, jf, indent=4, ensure_ascii=False)
-
